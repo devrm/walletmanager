@@ -1,0 +1,1 @@
+Wallet manager initial README
