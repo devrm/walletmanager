@@ -45,14 +45,14 @@ public class CreditCard {
     private LocalDate expirationDate;
 
     @Digits(integer = 10, fraction = 2)
-    private float cardLimit;
+    private Double cardLimit;
 
     @Digits(integer = 10, fraction = 2)
-    private float cardAmount;
+    private Double cardAmount;
 
     public CreditCard(){}
 
-    public CreditCard(String cardNumber, String cvv, LocalDate expirationDate, float cardLimit) {
+    public CreditCard(String cardNumber, String cvv, LocalDate expirationDate, Double cardLimit) {
         this.cardNumber = cardNumber;
         this.cvv = cvv;
         this.expirationDate = expirationDate;

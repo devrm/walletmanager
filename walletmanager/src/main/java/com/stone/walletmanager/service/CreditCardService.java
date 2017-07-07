@@ -38,9 +38,14 @@ public class CreditCardService {
         if (amount > card.getCardLimit()) {
             throw new IllegalArgumentException("Amount cannot be bigger than the credit card limit");
         }
+        Double amountToBeUpdated = card.getCardAmount();
+        if (amount > 0) {
+            amountToBeUpdated = card.getCardAmount() - amount;
+        } else {
+            throw new IllegalArgumentException("Invalid amount");
+        }
 
-
-        repository.modifyCard(amount, card.getCardNumber());
+        repository.modifyCard(amountToBeUpdated, card.getCardNumber());
     }
 
     public void modifyCard(Double amount, String cardNumber) {
