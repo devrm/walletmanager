@@ -1,6 +1,7 @@
 package com.stone.walletmanager.service;
 
 import com.stone.walletmanager.exception.CardAlreadyExistsException;
+import com.stone.walletmanager.exception.CardNotFoundException;
 import com.stone.walletmanager.exception.UserNotFoundException;
 import com.stone.walletmanager.model.CreditCard;
 import com.stone.walletmanager.model.NoCreditCard;
@@ -43,14 +44,25 @@ public class CreditCardService {
         return userCards;
     }
 
-    public void executeCreditCardPayment(Double amount, CreditCard card) {
+    public void executeCreditCardPayment(Double amount, String cardNumber) throws CardNotFoundException {
 
-        if (amount > card.getCardLimit()) {
-            throw new IllegalArgumentException("Amount cannot be bigger than the credit card limit");
+        CreditCard card = this.repository.getCard(cardNumber);
+        if (card != null) {
+            if (isAmountToPayValid(amount, card)) {
+                throw new IllegalArgumentException("Invalid amount:  "+amount + " Card limit: "+card.getCardLimit() + " Card amount: "+card.getCardAmount());
+            }
+
+            if (card.getCardAmount() != 0) {
+                amount = card.getCardAmount() - amount;
+                repository.modifyCard(amount, card.getCardNumber());
+            }
+        } else {
+            throw new CardNotFoundException("Card not found for payment.");
         }
+    }
 
-
-        repository.modifyCard(amount, card.getCardNumber());
+    private boolean isAmountToPayValid(Double amount, CreditCard card) {
+        return amount > card.getCardLimit() || amount < 0 || card.getCardAmount() < amount;
     }
 
     public void modifyCard(Double amount, String cardNumber) {

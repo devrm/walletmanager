@@ -1,6 +1,7 @@
 package com.stone.walletmanager.controller;
 
 import com.stone.walletmanager.exception.CardAlreadyExistsException;
+import com.stone.walletmanager.exception.CardNotFoundException;
 import com.stone.walletmanager.exception.UserNotFoundException;
 import com.stone.walletmanager.model.CreditCard;
 import com.stone.walletmanager.service.CreditCardService;
@@ -46,10 +47,16 @@ public class CreditCardController {
         return responseEntity;
     }
 
-
-    @RequestMapping(value = "/pay/card/{number}/{amount}", method = RequestMethod.POST)
-    public void payCrediCard(@PathVariable String number, @RequestParam Double amount) {
-        this.creditCardService.modifyCard(amount, number);
+    @RequestMapping(value = "/pay/card/{number}", method = RequestMethod.POST)
+    public HttpEntity payCrediCard(@PathVariable String number, @RequestParam Double amount) {
+        ResponseEntity responseEntity = null;
+        try {
+            this.creditCardService.executeCreditCardPayment(amount, number);
+            responseEntity = new ResponseEntity(HttpStatus.OK);
+        } catch (CardNotFoundException e) {
+            responseEntity = new ResponseEntity<String>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+        return responseEntity;
     }
 
 }
