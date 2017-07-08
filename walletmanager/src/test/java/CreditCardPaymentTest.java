@@ -1,7 +1,8 @@
 import com.stone.walletmanager.model.CreditCard;
 import com.stone.walletmanager.repository.CreditCardRepository;
+import com.stone.walletmanager.repository.UserRepository;
+import com.stone.walletmanager.repository.WalletRepository;
 import com.stone.walletmanager.service.CreditCardService;
-import org.dom4j.IllegalAddException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,6 +22,11 @@ public class CreditCardPaymentTest {
 
     @Mock
     private CreditCardRepository creditCardRepository;
+    @Mock
+    private UserRepository userRepository;
+    @Mock
+    private WalletRepository walletRepository;
+
     private CreditCard card;
 
     @Before
@@ -29,7 +35,7 @@ public class CreditCardPaymentTest {
         card.setCardAmount(500);
         card.setCardLimit(1000);
         card.setCardNumber("6666");
-        creditCardService = new CreditCardService(creditCardRepository);
+        creditCardService = new CreditCardService(creditCardRepository, userRepository, walletRepository);
         Mockito.doNothing().when(creditCardRepository).modifyCard(Matchers.anyDouble(), Matchers.anyString());
     }
 
