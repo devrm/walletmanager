@@ -1,5 +1,6 @@
 package com.stone.walletmanager.service;
 
+import com.stone.walletmanager.exception.CardAlreadyExistsException;
 import com.stone.walletmanager.model.CreditCard;
 import com.stone.walletmanager.model.NoCreditCard;
 import com.stone.walletmanager.repository.CreditCardRepository;
@@ -47,7 +48,13 @@ public class CreditCardService {
         repository.modifyCard(amount, cardNumber);
     }
 
-
+    public void inserCard(String userEmail, CreditCard card) throws CardAlreadyExistsException {
+        if (this.repository.getUserCard(userEmail, card.getCardNumber()) == null) {
+            this.repository.save(card);
+        } else {
+            throw new CardAlreadyExistsException("This user already have this card");
+        }
+    }
 
 
 }
