@@ -1,10 +1,14 @@
 package com.stone.walletmanager.controller;
 
 import com.stone.walletmanager.exception.CardAlreadyExistsException;
+import com.stone.walletmanager.exception.UserNotFoundException;
 import com.stone.walletmanager.model.CreditCard;
 import com.stone.walletmanager.service.CreditCardService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,22 +27,24 @@ public class CreditCardController {
         return this.creditCardService.getUserCards(email);
     }
 
-    @RequestMapping(value = "/card/{number}/", method = RequestMethod.POST)
+    @RequestMapping(value = "/card/{number}/", method = RequestMethod.GET)
     public void getCard(@PathVariable String number, @RequestParam Double amount) {
         this.creditCardService.modifyCard(amount, number);
     }
 
     @RequestMapping(value = "/card/{email}/", method = RequestMethod.POST)
-    public void addCard(@PathVariable String email, @RequestBody CreditCard card) {
-
-
+    public HttpEntity addCard(@PathVariable String email, @RequestBody CreditCard card) {
+        ResponseEntity responseEntity = null;
         try {
             this.creditCardService.inserCard(email, card);
+            responseEntity = new ResponseEntity<HttpStatus>(HttpStatus.OK);
         } catch (CardAlreadyExistsException e) {
-            e.printStackTrace();
+            responseEntity = new ResponseEntity<String>(e.getMessage(), HttpStatus.CONFLICT);
+        } catch (UserNotFoundException e) {
+            responseEntity = new ResponseEntity<String>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
+        return responseEntity;
     }
-
 
 
     @RequestMapping(value = "/pay/card/{number}/{amount}", method = RequestMethod.POST)
