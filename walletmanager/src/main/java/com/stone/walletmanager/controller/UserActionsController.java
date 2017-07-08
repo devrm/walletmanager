@@ -33,20 +33,15 @@ public class UserActionsController {
     }
 
     @RequestMapping(value = "/user", method = RequestMethod.POST)
-    public HttpEntity newUser(@RequestBody User user) {
+    public HttpEntity<Link> newUser(@RequestBody User user) {
 
         user.getWallet().setLimit(user.getWallet().getTotalLimit());
 
-        if (this.userRepository.findByEmail(user.getEmail()) == null) {
-            final User save = this.userRepository.save(user);
+        final User save = this.userRepository.save(user);
 
-            final Link link = this.entityLinks.linkToSingleResource(User.class, save.getId()).withSelfRel();
+        final Link link = this.entityLinks.linkToSingleResource(User.class, save.getId()).withSelfRel();
 
-            return new ResponseEntity<Link>(link, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<String>("User already exists.", HttpStatus.CONFLICT);
-        }
-
+        return new ResponseEntity<Link>(link, HttpStatus.OK);
     }
 
 }
