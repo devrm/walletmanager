@@ -18,7 +18,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 /**
  * Created by rodrigo.mafra on 04/07/2017.
  */
-@RestController(value = "useraction")
+@RestController
 public class UserActionsController {
 
     private UserRepository userRepository;
@@ -33,15 +33,23 @@ public class UserActionsController {
     }
 
     @RequestMapping(value = "/user", method = RequestMethod.POST)
-    public HttpEntity<Link> newUser(@RequestBody User user) {
+    public HttpEntity newUser(@RequestBody User user) {
 
+        ResponseEntity responseEntity = null;
         user.getWallet().setLimit(user.getWallet().getTotalLimit());
 
-        final User save = this.userRepository.save(user);
+        if (this.userRepository.findByEmail(user.getEmail()) == null) {
+            final User save = this.userRepository.save(user);
 
-        final Link link = this.entityLinks.linkToSingleResource(User.class, save.getId()).withSelfRel();
+            final Link link = this.entityLinks.linkToSingleResource(User.class, save.getId()).withSelfRel();
 
-        return new ResponseEntity<Link>(link, HttpStatus.OK);
+            responseEntity = new ResponseEntity<Link>(link, HttpStatus.OK);
+
+        } else {
+            responseEntity = new ResponseEntity<String>("User with e-mail "+user.getEmail()+" exists.", HttpStatus.CONFLICT);
+        }
+
+        return responseEntity;
     }
 
 }
