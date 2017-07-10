@@ -9,8 +9,11 @@ import org.springframework.hateoas.EntityLinks;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.websocket.server.PathParam;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
@@ -32,6 +35,16 @@ public class UserActionsController {
         this.entityLinks = entityLinks;
     }
 
+    @RequestMapping(value = "/user/findByEmail", method = RequestMethod.GET
+    )
+    @ResponseBody
+    public ResponseEntity findByEmail(@RequestParam String email) {
+
+        return new ResponseEntity<User>(this.userRepository.findByEmail(email), HttpStatus.OK);
+
+    }
+
+
     @RequestMapping(value = "/user", method = RequestMethod.POST)
     public HttpEntity newUser(@RequestBody User user) {
 
@@ -51,5 +64,7 @@ public class UserActionsController {
 
         return responseEntity;
     }
+
+
 
 }

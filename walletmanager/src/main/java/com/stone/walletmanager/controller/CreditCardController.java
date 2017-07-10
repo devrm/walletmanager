@@ -28,8 +28,8 @@ public class CreditCardController {
         return this.creditCardService.getUserCards(email);
     }
 
-    @RequestMapping(value = "/card/{number}/", method = RequestMethod.GET)
-    public void getCard(@PathVariable String number, @RequestParam Double amount) {
+    @RequestMapping(value = "/card/{number}/", method = RequestMethod.PUT)
+    public void updateAmount(@PathVariable String number, @RequestParam Double amount) {
         this.creditCardService.modifyCard(amount, number);
     }
 

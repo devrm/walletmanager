@@ -21,8 +21,7 @@ import java.util.List;
 @RepositoryRestResource(collectionResourceRel = "user", path = "user")
 public interface UserRepository extends CrudRepository<User, Long> {
 
-    @RequestMapping("/findByEmail")
-    @ResponseBody
+    @Query("from User where email = :email")
     User findByEmail(@Param("email") String email);
 
 
