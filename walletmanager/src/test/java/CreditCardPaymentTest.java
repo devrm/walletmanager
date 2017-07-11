@@ -37,6 +37,7 @@ public class CreditCardPaymentTest {
         card.setCardLimit(1000.0);
         card.setCardNumber("6666");
         creditCardService = new CreditCardService(creditCardRepository, userRepository, walletRepository);
+        Mockito.doReturn(card).when(creditCardRepository).getCard(this.card.getCardNumber());
         Mockito.doNothing().when(creditCardRepository).modifyCard(Matchers.anyDouble(), Matchers.anyString());
     }
 

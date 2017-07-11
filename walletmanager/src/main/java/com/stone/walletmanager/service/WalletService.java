@@ -22,7 +22,7 @@ public class WalletService {
     public void updateMaxLimit(final Wallet wallet, final Double maxLimit) throws WalletLimitNotPermitted {
 
         if (maxLimit > wallet.getTotalLimit()) {
-            throw new WalletLimitNotPermitted("Limite maximo nao permitido (maior que a soma dos cartoes)");
+            throw new WalletLimitNotPermitted("Max limit not allowed (bigger than the sum of creditcards limit)");
         }
 
         this.walletRepository.updateLimit(wallet.getId(), maxLimit);

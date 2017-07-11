@@ -1,6 +1,5 @@
-package com.stone.walletmanager.interceptor;
+package com.stone.walletpurchase.interceptor;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -45,7 +44,12 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         HandlerMethod handlerMethod = (HandlerMethod) handler;
 
         String token = request.getHeader("token");
-        String purchaseToken = request.getParameter("purchaseallow");
+
+        if(StringUtils.isEmpty(token)) {
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            response.getWriter().write("Authentication failed. Please provide needed access token.");
+            return false;
+        }
 
 
         RestTemplate restTemplate = new RestTemplate();
@@ -55,22 +59,14 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 
         MultiValueMap<String, String> map= new LinkedMultiValueMap<String, String>();
         map.add("token", token);
-        if (StringUtils.isEmpty(purchaseToken)) {
-            if(StringUtils.isEmpty(token)) {
-                response.setStatus(HttpStatus.UNAUTHORIZED.value());
-                response.getWriter().write("Authentication failed. Please provide needed access token.");
-                return false;
-            }
+        HttpEntity<MultiValueMap<String, String>> requestPost = new HttpEntity<MultiValueMap<String, String>>(map, headers);
+        try {
+            ResponseEntity<Boolean> resp = restTemplate.postForEntity(tokenPost.toUriString(), requestPost, Boolean.class);
+        } catch (HttpClientErrorException e) {
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            response.getWriter().write("Authentication failed. Invalid token.");
 
-            HttpEntity<MultiValueMap<String, String>> requestPost = new HttpEntity<MultiValueMap<String, String>>(map, headers);
-            try {
-                ResponseEntity<Boolean> resp = restTemplate.postForEntity(tokenPost.toUriString(), requestPost, Boolean.class);
-            } catch (HttpClientErrorException e) {
-                response.setStatus(HttpStatus.UNAUTHORIZED.value());
-                response.getWriter().write("Authentication failed. Invalid token.");
-
-                return false;
-            }
+            return false;
         }
 
         return true;
