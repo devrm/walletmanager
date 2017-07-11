@@ -20,13 +20,13 @@
 					},
 					{
 						"key": "token",
-						"value": "fohq141d5kmsecac89kio9s7ha",
+						"value": "d96pbhbh0kqn84gahp64guq",
 						"description": ""
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"email\" : \"rodrigo.a.mafra@gmail.com\",\r\n  \"wallet\" : { \"cards\" :\r\n  \t\t\t\t[\r\n                  {\"cardNumber\" : \"1111222233336666\",\r\n\t\t\t\t\t\"cvv\": \"856\", \"cardLimit\": 6.5, \"dueDate\" : \"2017-06-01\", \"expirationDate\" :  \"2019-06-30\"},\r\n    \t\t\t  {\"cardNumber\" : \"1111222233331111\",\r\n\t\t\t\t\t\"cvv\": \"666\", \"cardLimit\": 106.5, \"dueDate\" : \"2017-06-02\", \"expirationDate\" :  \"2020-06-30\"}\r\n                ]\r\n  }\r\n\r\n}"
+					"raw": "{\r\n  \"email\" : \"rodrigo.a.mafra@gmail.com\",\r\n  \"wallet\" : { \"cards\" :\r\n  \t\t\t\t[\r\n                  {\"cardNumber\" : \"1111222233336666\",\r\n\t\t\t\t\t\"cvv\": \"856\", \"cardLimit\": 650, \"cardAmount\" : 0, \"dueDate\" : \"2017-06-01\", \"expirationDate\" :  \"2019-06-30\"},\r\n    \t\t\t  {\"cardNumber\" : \"1111222233331111\",\r\n\t\t\t\t\t\"cvv\": \"666\", \"cardLimit\": 100, \"cardAmount\": 0, \"dueDate\" : \"2017-06-02\", \"expirationDate\" :  \"2020-06-30\"}\r\n                ]\r\n  }\r\n\r\n}"
 				},
 				"description": "Insert a new user with a wallet and it's cards."
 			},
@@ -67,7 +67,7 @@
 					},
 					{
 						"key": "token",
-						"value": "validtoken",
+						"value": "oi6ti1ri8m1df3ptqen9pr5tt",
 						"description": ""
 					}
 				],

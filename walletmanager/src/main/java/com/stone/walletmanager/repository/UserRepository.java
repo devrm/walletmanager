@@ -18,7 +18,6 @@ import java.util.List;
 /**
  * Created by rodrigo.mafra on 29/06/2017.
  */
-@RepositoryRestResource(collectionResourceRel = "user", path = "user")
 public interface UserRepository extends CrudRepository<User, Long> {
 
     @Query("from User where email = :email")
@@ -30,9 +29,5 @@ public interface UserRepository extends CrudRepository<User, Long> {
     @Transactional
     void updateWalletLimit(@Param("amount") float amount, @Param("cardNumber") String cardNumber);
 
-
-    @Override
-    @RestResource(exported = false)
-    public User save(User user);
 
 }

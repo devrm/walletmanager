@@ -35,14 +35,36 @@ public class UserActionsController {
         this.entityLinks = entityLinks;
     }
 
-    @RequestMapping(value = "/user/findByEmail", method = RequestMethod.GET
-    )
+    @RequestMapping(value = "/user/findByEmail", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity findByEmail(@RequestParam String email) {
 
         return new ResponseEntity<User>(this.userRepository.findByEmail(email), HttpStatus.OK);
 
     }
+
+    @RequestMapping(value = "/user/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    public HttpEntity findOne(@PathVariable Long id) {
+
+        final User one = this.userRepository.findOne(id);
+
+        if (one != null) {
+            return new ResponseEntity<User>(one, HttpStatus.OK);
+        } else {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+
+
+    }
+
+    @RequestMapping(value = "/user/{id}", method = RequestMethod.DELETE)
+    @ResponseBody
+    public HttpEntity<User> delete(@PathVariable Long id) {
+        this.userRepository.delete(id);
+        return new ResponseEntity<User>(this.userRepository.findOne(id), HttpStatus.NO_CONTENT);
+    }
+
 
     @RequestMapping(value = "/user", method = RequestMethod.POST)
     public HttpEntity newUser(@RequestBody User user) {
