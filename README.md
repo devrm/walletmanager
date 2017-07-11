@@ -23,7 +23,7 @@ https://slack-files.com/T06M9ENDT-F5XK4J0P2-532510c5c0
 
 ### Building ###
 ```
-walletmanager\walletwebtoken> $ mvn clean package
+walletmanager\walletmanager> $ mvn clean package
 walletmanager\walletpurchase> $ mvn clean package
 walletmanager\walletwebtoken> $ mvn clean package
 
@@ -32,14 +32,13 @@ walletmanager\walletwebtoken> $ mvn clean package
 ### Running ###
 Pre-requisites: jdk-8 installed, run all the modules jar
 
-**Windows**
 ```
-walletmanager\modules>runwallet.bat
+walletmanager\walletwebtoken> $ java -jar target/walletmanager-1.0.0.jar
+walletmanager\walletpurchase> $ java -jar target/walletpurchase-1.0.0.jar
+walletmanager\walletwebtoken> $ java -jar target/walletwebtoken-1.0.0.jar
 ```
-**Linux**
-```
-walletmanager/modules/runwallet.sh
-```
+
+
 All modules jars are inside root <modules> folder.
 
 In order to test the API the chrome extension postman (https://chrome.google.com/webstore/detail/postman/fhbjgbiflinjbdggehcddcbncdddomop)
