@@ -4,5 +4,8 @@ walletmanager.iml
 walletpurchase/target
 walletpurchase/.idea
 walletpurchase.iml
+walletwebtoken/target
+walletwebtoken/.idea
+walletwebtoken/walletwebtoken.iml
 .idea
 .DS_STORE

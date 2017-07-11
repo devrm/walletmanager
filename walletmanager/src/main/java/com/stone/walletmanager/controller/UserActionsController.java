@@ -44,7 +44,6 @@ public class UserActionsController {
 
     }
 
-
     @RequestMapping(value = "/user", method = RequestMethod.POST)
     public HttpEntity newUser(@RequestBody User user) {
 
@@ -64,7 +63,4 @@ public class UserActionsController {
 
         return responseEntity;
     }
-
-
-
 }
