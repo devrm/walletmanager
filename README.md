@@ -38,12 +38,9 @@ walletmanager\walletpurchase> $ java -jar target/walletpurchase-1.0.0.jar
 walletmanager\walletwebtoken> $ java -jar target/walletwebtoken-1.0.0.jar
 ```
 
-
-All modules jars are inside root <modules> folder.
-
 In order to test the API the chrome extension postman (https://chrome.google.com/webstore/detail/postman/fhbjgbiflinjbdggehcddcbncdddomop)
 can be used.
 
-The file "Stone Wallet Manager.postman_collection.json" file can be imported into the extension for sample usage and testing purposes. It contains the authentication mechanism samples as well (both valid and invalid tokens).
+The file "Stone Wallet Manager.postman_collection.json" file can be imported into the extension for sample usage and testing purposes. It contains the authentication mechanism samples as well (both valid and invalid tokens). The token has to be sent through the header as the postman example shows.
 
 Note: This project uses lombok (https://projectlombok.org/) for code generation.
