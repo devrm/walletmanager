@@ -31,3 +31,5 @@ In order to test the API the chrome extension postman (https://chrome.google.com
 can be used.
 
 The file "Stone Wallet Manager.postman_collection.json" file can be imported into the extension for sample usage and testing purposes. It contains the authentication mechanism samples as well (both valid and invalid tokens).
+
+Note: This project uses lombok (https://projectlombok.org/) for code generation.
