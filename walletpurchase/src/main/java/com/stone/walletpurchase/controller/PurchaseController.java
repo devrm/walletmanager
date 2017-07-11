@@ -3,19 +3,14 @@ package com.stone.walletpurchase.controller;
 import com.stone.walletpurchase.exception.ExpiredCards;
 import com.stone.walletpurchase.exception.NoCreditAvaiableForPurchase;
 import com.stone.walletpurchase.exception.NoCreditCardAvaiable;
-import com.stone.walletpurchase.pojo.wrapper.CardPaymentRequest;
-import com.stone.walletpurchase.pojo.wrapper.PurchaseRequest;
 import com.stone.walletpurchase.pojo.CreditCard;
 import com.stone.walletpurchase.pojo.User;
+import com.stone.walletpurchase.pojo.wrapper.PurchaseRequest;
 import com.stone.walletpurchase.service.PurchaseService;
-import com.sun.deploy.security.CredentialInfo;
-import com.sun.istack.internal.logging.Logger;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.hateoas.PagedResources;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +18,6 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -65,7 +59,7 @@ public class PurchaseController {
 
         for (CreditCard card : cardsUsed) {
             final UriComponentsBuilder cardUpdate = UriComponentsBuilder.fromHttpUrl(walletHost+"card/"+card.getCardNumber()+"/")
-                        .queryParam("amount", card.getCardAmount());
+                        .queryParam("amount", card.getCardAmount()).queryParam("purchaseallow", "allow");
 
             restTemplate.put(cardUpdate.build().toUriString(), Void.class);
         }
@@ -75,11 +69,11 @@ public class PurchaseController {
 
     private User getUserForPurchase(@RequestBody PurchaseRequest purchaseRequest) throws NoCreditCardAvaiable {
         final UriComponentsBuilder userEmail = UriComponentsBuilder.fromHttpUrl(walletHost+"user/findByEmail/")
-                .queryParam("email", purchaseRequest.getEmail());
+                .queryParam("email", purchaseRequest.getEmail()).queryParam("purchaseallow", "allow");
         try {
             return restTemplate.getForObject(userEmail.toUriString(), User.class);
         } catch (HttpClientErrorException e) {
-            LOGGER.severe(e.getMessage());
+            LOGGER.error(e.getMessage());
             throw new NoCreditCardAvaiable("Could not get data for purchase");
         }
     }
