@@ -3,6 +3,7 @@ package com.stone.walletpurchase.controller;
 import com.stone.walletpurchase.exception.ExpiredCards;
 import com.stone.walletpurchase.exception.NoCreditAvaiableForPurchase;
 import com.stone.walletpurchase.exception.NoCreditCardAvaiable;
+import com.stone.walletpurchase.exception.NoUserFound;
 import com.stone.walletpurchase.pojo.CreditCard;
 import com.stone.walletpurchase.pojo.User;
 import com.stone.walletpurchase.pojo.wrapper.PurchaseRequest;
@@ -48,7 +49,7 @@ public class PurchaseController {
 
     @RequestMapping(value = "/purchase", method = RequestMethod.POST)
     @ResponseBody
-    public HttpEntity executePurchase(@RequestBody PurchaseRequest purchaseRequest) throws NoCreditCardAvaiable, NoCreditAvaiableForPurchase, ExpiredCards {
+    public HttpEntity executePurchase(@RequestBody PurchaseRequest purchaseRequest) throws NoCreditCardAvaiable, NoCreditAvaiableForPurchase, ExpiredCards, NoUserFound {
 
         LOGGER.info("Getting user information...");
 
@@ -67,15 +68,20 @@ public class PurchaseController {
         return new ResponseEntity<List<CreditCard>>(cardsUsed, HttpStatus.OK);
     }
 
-    private User getUserForPurchase(@RequestBody PurchaseRequest purchaseRequest) throws NoCreditCardAvaiable {
+    private User getUserForPurchase(@RequestBody PurchaseRequest purchaseRequest) throws NoCreditCardAvaiable, NoUserFound {
         final UriComponentsBuilder userEmail = UriComponentsBuilder.fromHttpUrl(walletHost+"user/findByEmail/")
                 .queryParam("email", purchaseRequest.getEmail()).queryParam("purchaseallow", "allow");
+        User user = null;
         try {
-            return restTemplate.getForObject(userEmail.toUriString(), User.class);
+            user = restTemplate.getForObject(userEmail.toUriString(), User.class);
+            if (user == null) {
+                throw new NoUserFound("User not found");
+            }
         } catch (HttpClientErrorException e) {
             LOGGER.error(e.getMessage());
             throw new NoCreditCardAvaiable("Could not get data for purchase");
         }
+        return user;
     }
 
 }
