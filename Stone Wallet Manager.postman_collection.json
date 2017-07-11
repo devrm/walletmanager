@@ -1,0 +1,268 @@
+{
+	"variables": [],
+	"info": {
+		"name": "Stone Wallet Manager",
+		"_postman_id": "63f28421-44b1-b135-6d89-43cc9f9c7b91",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Insert user",
+			"request": {
+				"url": "localhost:8080/user",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "token",
+						"value": "fohq141d5kmsecac89kio9s7ha",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\" : \"rodrigo.a.mafra@gmail.com\",\r\n  \"wallet\" : { \"cards\" :\r\n  \t\t\t\t[\r\n                  {\"cardNumber\" : \"1111222233336666\",\r\n\t\t\t\t\t\"cvv\": \"856\", \"cardLimit\": 6.5, \"dueDate\" : \"2017-06-01\", \"expirationDate\" :  \"2019-06-30\"},\r\n    \t\t\t  {\"cardNumber\" : \"1111222233331111\",\r\n\t\t\t\t\t\"cvv\": \"666\", \"cardLimit\": 106.5, \"dueDate\" : \"2017-06-02\", \"expirationDate\" :  \"2020-06-30\"}\r\n                ]\r\n  }\r\n\r\n}"
+				},
+				"description": "Insert a new user with a wallet and it's cards."
+			},
+			"response": []
+		},
+		{
+			"name": "Get an user",
+			"request": {
+				"url": "localhost:8080/user/1",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "token",
+						"value": "fohq141d5kmsecac89kio9s7ha",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": "Get user data using the id as request param."
+			},
+			"response": []
+		},
+		{
+			"name": "Purchase for an user",
+			"request": {
+				"url": "localhost:8081/purchase/",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "token",
+						"value": "validtoken",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"email\" : \"rodrigo.a.mafra@gmail.com\",\n\t\"amount\" : 150\n}"
+				},
+				"description": "execute a new purchase for a specific user"
+			},
+			"response": []
+		},
+		{
+			"name": "Remove an user",
+			"request": {
+				"url": "http://localhost:8080/user/1",
+				"method": "DELETE",
+				"header": [],
+				"body": {},
+				"description": "remove an user"
+			},
+			"response": []
+		},
+		{
+			"name": "Insert a new card",
+			"request": {
+				"url": "localhost:8080/card/rodrigo.a.mafra@gmail.com/",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"cardNumber\" : \"11111\",\r\n\"cvv\": \"856\", \"cardLimit\": 6.500, \"dueDate\" : \"2017-06-01\", \"expirationDate\" :  \"2015-06-30\"}\r\n"
+				},
+				"description": "Inserting a new card for an user"
+			},
+			"response": []
+		},
+		{
+			"name": "Web Token Request",
+			"request": {
+				"url": {
+					"raw": "localhost:8082/token?user=stone&password=hardcodedpassword",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"token"
+					],
+					"query": [
+						{
+							"key": "user",
+							"value": "stone",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "password",
+							"value": "hardcodedpassword",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": "Simple web token request"
+			},
+			"response": []
+		},
+		{
+			"name": "Pay creditcard amount",
+			"request": {
+				"url": "localhost:8080/pay/card/777777777777",
+				"method": "POST",
+				"header": [
+					{
+						"key": "token",
+						"value": "9o5unh07u7re9isdkbfjqptm4n",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "amount",
+							"value": "200",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"description": "pay a certain creditcard amount"
+			},
+			"response": []
+		},
+		{
+			"name": "Find an user",
+			"request": {
+				"url": {
+					"raw": "localhost:8080/user/search/findByEmail?email=rodrigo.a.mafra@gmail.com",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"user",
+						"search",
+						"findByEmail"
+					],
+					"query": [
+						{
+							"key": "email",
+							"value": "rodrigo.a.mafra@gmail.com",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "token",
+						"value": "9o5unh07u7re9isdkbfjqptm4n",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": "Find a specific user using it's e-mail"
+			},
+			"response": []
+		},
+		{
+			"name": "Authentication post",
+			"request": {
+				"url": "localhost:8082/token",
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "token",
+							"value": "ke1f8nss3ilm828k3e4p2b3lqp",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"description": "Authentication example post\n"
+			},
+			"response": []
+		},
+		{
+			"name": "Remove a card",
+			"request": {
+				"url": "localhost:8080/card/9999999999999",
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "token",
+						"value": "fohq141d5kmsecac89kio9s7ha",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Wallet limit update",
+			"request": {
+				"url": "localhost:8080/updatelimit/rodrigo.a.mafra@gmail.com/100",
+				"method": "POST",
+				"header": [
+					{
+						"key": "token",
+						"value": "fohq141d5kmsecac89kio9s7ha",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}
