@@ -20,18 +20,27 @@ https://slack-files.com/T06M9ENDT-F5XK4J0P2-532510c5c0
 * walletpurchase (contains the purchase logic described in the requirement)
 * walletwebtoken (contains the simple webtoken authentication mechanism)
 
-How to run the app:
 
+### Building ###
+```
+walletmanager\walletmanager> $ mvn clean package
+walletmanager\walletpurchase> $ mvn clean package
+walletmanager\walletwebtoken> $ mvn clean package
+
+```
+
+### Running ###
 Pre-requisites: jdk-8 installed, run all the modules jar
 
-Command:
-java -jar MODULE.jar
-
-All modules jars are inside root modules folder.
+```
+walletmanager\walletwebtoken> $ java -jar target/walletmanager-1.0.0.jar
+walletmanager\walletpurchase> $ java -jar target/walletpurchase-1.0.0.jar
+walletmanager\walletwebtoken> $ java -jar target/walletwebtoken-1.0.0.jar
+```
 
 In order to test the API the chrome extension postman (https://chrome.google.com/webstore/detail/postman/fhbjgbiflinjbdggehcddcbncdddomop)
 can be used.
 
-The file "Stone Wallet Manager.postman_collection.json" file can be imported into the extension for sample usage and testing purposes. It contains the authentication mechanism samples as well (both valid and invalid tokens).
+The file "Stone Wallet Manager.postman_collection.json" file can be imported into the extension for sample usage and testing purposes. It contains the authentication mechanism samples as well (both valid and invalid tokens). The token has to be sent through the header as the postman example shows.
 
 Note: This project uses lombok (https://projectlombok.org/) for code generation.
