@@ -41,6 +41,7 @@ public class PurchaseService {
             if (collectCards.isEmpty()) {
                 throw new ExpiredCards("All user cards are expired.");
             }
+
             collectCards.sort(limitComparator);
             collectCards.sort(dueDateComparator);
 

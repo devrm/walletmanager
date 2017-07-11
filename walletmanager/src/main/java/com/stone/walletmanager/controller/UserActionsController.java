@@ -9,8 +9,11 @@ import org.springframework.hateoas.EntityLinks;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.websocket.server.PathParam;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
@@ -18,7 +21,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 /**
  * Created by rodrigo.mafra on 04/07/2017.
  */
-@RestController(value = "useraction")
+@RestController
 public class UserActionsController {
 
     private UserRepository userRepository;
@@ -32,16 +35,32 @@ public class UserActionsController {
         this.entityLinks = entityLinks;
     }
 
-    @RequestMapping(value = "/user", method = RequestMethod.POST)
-    public HttpEntity<Link> newUser(@RequestBody User user) {
+    @RequestMapping(value = "/user/findByEmail", method = RequestMethod.GET
+    )
+    @ResponseBody
+    public ResponseEntity findByEmail(@RequestParam String email) {
 
-        user.getWallet().setLimit(user.getWallet().getTotalLimit());
+        return new ResponseEntity<User>(this.userRepository.findByEmail(email), HttpStatus.OK);
 
-        final User save = this.userRepository.save(user);
-
-        final Link link = this.entityLinks.linkToSingleResource(User.class, save.getId()).withSelfRel();
-
-        return new ResponseEntity<Link>(link, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/user", method = RequestMethod.POST)
+    public HttpEntity newUser(@RequestBody User user) {
+
+        ResponseEntity responseEntity = null;
+        user.getWallet().setLimit(user.getWallet().getTotalLimit());
+
+        if (this.userRepository.findByEmail(user.getEmail()) == null) {
+            final User save = this.userRepository.save(user);
+
+            final Link link = this.entityLinks.linkToSingleResource(User.class, save.getId()).withSelfRel();
+
+            responseEntity = new ResponseEntity<Link>(link, HttpStatus.OK);
+
+        } else {
+            responseEntity = new ResponseEntity<String>("User with e-mail "+user.getEmail()+" exists.", HttpStatus.CONFLICT);
+        }
+
+        return responseEntity;
+    }
 }

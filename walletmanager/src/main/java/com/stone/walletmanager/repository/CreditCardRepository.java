@@ -21,6 +21,9 @@ public interface CreditCardRepository extends CrudRepository<CreditCard, Long> {
             "order by c.dueDate desc, c.cardLimit")
     List<CreditCard> getUserCards(@Param("email") String email);
 
+    @Query("from CreditCard where cardNumber = :cardNumber")
+    CreditCard getCard(@Param("cardNumber") String cardNumber);
+
     @Modifying
     @Query("update CreditCard c set c.cardAmount = :amount where c.cardNumber = :cardNumber")
     @Transactional
