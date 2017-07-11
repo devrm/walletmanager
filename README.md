@@ -27,6 +27,8 @@ Pre-requisites: jdk-8 installed, run all the modules jar
 Command:
 java -jar MODULE.jar
 
+All modules jars are inside root modules folder.
+
 In order to test the API the chrome extension postman (https://chrome.google.com/webstore/detail/postman/fhbjgbiflinjbdggehcddcbncdddomop)
 can be used.
 
