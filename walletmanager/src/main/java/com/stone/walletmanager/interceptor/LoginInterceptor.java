@@ -45,9 +45,6 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         HandlerMethod handlerMethod = (HandlerMethod) handler;
 
         String token = request.getHeader("token");
-        String purchaseToken = request.getParameter("purchaseallow");
-
-
         RestTemplate restTemplate = new RestTemplate();
         final UriComponentsBuilder tokenPost = UriComponentsBuilder.fromHttpUrl(walletWebTokenUrl+"/token/");
         HttpHeaders headers = new HttpHeaders();
@@ -55,22 +52,21 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 
         MultiValueMap<String, String> map= new LinkedMultiValueMap<String, String>();
         map.add("token", token);
-        if (StringUtils.isEmpty(purchaseToken)) {
-            if(StringUtils.isEmpty(token)) {
-                response.setStatus(HttpStatus.UNAUTHORIZED.value());
-                response.getWriter().write("Authentication failed. Please provide needed access token.");
-                return false;
-            }
 
-            HttpEntity<MultiValueMap<String, String>> requestPost = new HttpEntity<MultiValueMap<String, String>>(map, headers);
-            try {
-                ResponseEntity<Boolean> resp = restTemplate.postForEntity(tokenPost.toUriString(), requestPost, Boolean.class);
-            } catch (HttpClientErrorException e) {
-                response.setStatus(HttpStatus.UNAUTHORIZED.value());
-                response.getWriter().write("Authentication failed. Invalid token.");
+        if(StringUtils.isEmpty(token)) {
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            response.getWriter().write("Authentication failed. Please provide needed access token.");
+            return false;
+        }
 
-                return false;
-            }
+        HttpEntity<MultiValueMap<String, String>> requestPost = new HttpEntity<MultiValueMap<String, String>>(map, headers);
+        try {
+            ResponseEntity<Boolean> resp = restTemplate.postForEntity(tokenPost.toUriString(), requestPost, Boolean.class);
+        } catch (HttpClientErrorException e) {
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            response.getWriter().write("Authentication failed. Invalid token.");
+
+            return false;
         }
 
         return true;

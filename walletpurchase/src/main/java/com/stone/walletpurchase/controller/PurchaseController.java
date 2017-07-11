@@ -11,9 +11,7 @@ import com.stone.walletpurchase.service.PurchaseService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -49,31 +47,40 @@ public class PurchaseController {
 
     @RequestMapping(value = "/purchase", method = RequestMethod.POST)
     @ResponseBody
-    public HttpEntity executePurchase(@RequestBody PurchaseRequest purchaseRequest) throws NoCreditCardAvaiable, NoCreditAvaiableForPurchase, ExpiredCards, NoUserFound {
+    public HttpEntity executePurchase(@RequestHeader("token") String token, @RequestBody PurchaseRequest purchaseRequest) throws NoCreditCardAvaiable, NoCreditAvaiableForPurchase, ExpiredCards, NoUserFound {
 
         LOGGER.info("Getting user information...");
 
-        final User user = getUserForPurchase(purchaseRequest);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("token", token);
+        HttpEntity entity = new HttpEntity(headers);
+
+
+        final User user = getUserForPurchase(purchaseRequest, entity);
 
         final List<CreditCard> cards = user.getWallet().getCards();
         final List<CreditCard> cardsUsed = this.purchaseService.executePurchase(cards, purchaseRequest.getAmount(), user.getWallet().getLimit());
 
-        for (CreditCard card : cardsUsed) {
-            final UriComponentsBuilder cardUpdate = UriComponentsBuilder.fromHttpUrl(walletHost+"card/"+card.getCardNumber()+"/")
-                        .queryParam("amount", card.getCardAmount()).queryParam("purchaseallow", "allow");
-
-            restTemplate.put(cardUpdate.build().toUriString(), Void.class);
-        }
+        updateCreditCardAmount(entity, cardsUsed);
 
         return new ResponseEntity<List<CreditCard>>(cardsUsed, HttpStatus.OK);
     }
 
-    private User getUserForPurchase(@RequestBody PurchaseRequest purchaseRequest) throws NoCreditCardAvaiable, NoUserFound {
+    private void updateCreditCardAmount(HttpEntity entity, List<CreditCard> cardsUsed) {
+        for (CreditCard card : cardsUsed) {
+            final UriComponentsBuilder cardUpdate = UriComponentsBuilder.fromHttpUrl(walletHost+"card/"+card.getCardNumber()+"/")
+                        .queryParam("amount", card.getCardAmount());
+
+            restTemplate.put(cardUpdate.build().toUriString(), entity, Void.class);
+        }
+    }
+
+    private User  getUserForPurchase(@RequestBody PurchaseRequest purchaseRequest, HttpEntity header) throws NoCreditCardAvaiable, NoUserFound {
         final UriComponentsBuilder userEmail = UriComponentsBuilder.fromHttpUrl(walletHost+"user/findByEmail/")
-                .queryParam("email", purchaseRequest.getEmail()).queryParam("purchaseallow", "allow");
+                .queryParam("email", purchaseRequest.getEmail());
         User user = null;
         try {
-            user = restTemplate.getForObject(userEmail.toUriString(), User.class);
+            user = restTemplate.exchange(userEmail.toUriString(), HttpMethod.GET, header, User.class).getBody();
             if (user == null) {
                 throw new NoUserFound("User not found");
             }
